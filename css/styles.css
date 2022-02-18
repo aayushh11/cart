@@ -179,13 +179,13 @@ body{
     padding-top: 2rem;
     padding-bottom: 2rem;
 }
-.menuItemLeftsection{
+.menuItemLeftSection{
     flex:1;
 }
 .menuItemLeftsection h3{
     font-weight: lighter;
 }
-.menuItemRightsection{
+.menuItemRightSection{
     float:right;
     flex:1;
     display:flex;
@@ -217,15 +217,21 @@ body{
 }
 .searchAndFilterForm{
     display:flex;
+    margin-top: 3rem;
+    position:relative;
+    top:7rem;
+    
 }
-.searchBar{
-    height:2rem;
+.searchQuery{
+    height: 2rem;
+    width:12rem;
 }
 .filterButtons{
     background-color: #fff;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-left: 3rem;
+    margin-right: 3rem;
     height :2rem;
+    font-size: 1.5rem;
 
     color:black;
 }
@@ -255,4 +261,37 @@ body{
 
 .restaurantOffer{
     font-size:1.5rem;
+}
+
+.cartItem{
+    display:flex;
+    font-size: 1.4rem;
+    margin:1rem;
+    padding:1rem;
+}
+.cartItemQuantity{
+    display:flex;
+    flex:2;
+}
+.cartItemName{
+    flex:2;
+}
+.cartItemTotal{
+    flex:1;
+}
+
+.cartItemsList{
+    overflow-y: scroll;
+    scrollbar-width:thin;
+    scrollbar-color: orange;
+}
+.cartSubtotal{
+    display:flex;
+}
+.subtotalAmount{
+    flex:1;
+    text-align: right;
+}
+.subtotalHeading{
+    flex:1;
 }
