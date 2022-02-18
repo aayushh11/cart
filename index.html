@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <html>
     <head>
         <title>
@@ -66,10 +67,10 @@
                
                     
                         <div class="searchAndFilterForm"> 
-                            <div class="searchBar">
+                            <div class="filterButtons">
                                 
                                 
-                                <input type="search" id="query" name="q" placeholder="Search...">
+                                <input type="search" class="searchQuery" name="q" placeholder="Search...">
                                 
                                 
                             </div>
@@ -106,66 +107,20 @@
         </div>
 
         <div class="restaurantMenu pagePadding">
-            <div class="recommendationList">
-                <ul >
-                    <li>Recommended</li>
-                    <li>Samosas</li>
-                    <li>Bun Clubs</li>
-                    <li>Pav Bhaji</li>
-                    <li>Grilled chicken</li>
-                    <li>Desserts</li>
-                    <li>Cookies</li>
-                    <li>Coldies</li>
-                    <li>Vada Pav</li>
-                    <li>Sub-Sandwich</li>
-                    <li>Masala Dosa</li>
-                    <li>Sevpuri</li>
-                    
-                    <li>Samosas</li>
-                    <li>Bun Clubs</li>
-                    <li>Pav Bhaji</li>
-                    <li>Grilled chicken</li>
-                    <li>Desserts</li>
-                    <li>Cookies</li>
-                    <li>Coldies</li>
-                    <li>Vada Pav</li>
-                    <li>Sub-Sandwich</li>
-                    <li>Masala Dosa</li>
-                    <li>Sevpuri</li>
-                    
-                    <li>Samosas</li>
-                    <li>Bun Clubs</li>
-                    <li>Pav Bhaji</li>
-                    <li>Grilled chicken</li>
-                    <li>Desserts</li>
-                    <li>Cookies</li>
-                    <li>Coldies</li>
-                    <li>Vada Pav</li>
-                    <li>Sub-Sandwich</li>
-                    <li>Masala Dosa</li>
-                    <li>Sevpuri</li>
-                    
-                    <li>Samosas</li>
-                    <li>Bun Clubs</li>
-                    <li>Pav Bhaji</li>
-                    <li>Grilled chicken</li>
-                    <li>Desserts</li>
-                    <li>Cookies</li>
-                    <li>Coldies</li>
-                    <li>Vada Pav</li>
-                    <li>Sub-Sandwich</li>
-                    <li>Masala Dosa</li>
-                    <li>Sevpuri</li>
+            <div class="recommendationList" id="recommendedList" >
+                
 
-                </ul>
+                
             </div>
                 
             
-            <div class="menuItemList">
+            <div class="menuItemList" id="menuItemList">
+                <!--
                 <div class="menuHeading">
                     <h1><b>Recommended</b></h1>
                     <p>58 items</p>
                 </div>
+                
                 <div class="menuItem">
                     <div class="menuItemLeftsection">
                         <img src="images/veg.jpg" alt="veg-icon" class="vegIcon">
@@ -278,19 +233,24 @@
                     
                 </div>
                 <hr height="1px" margin="5px" color="#EFEFEF">
-                
+         -->       
             </div>
 
-            
+        
 
-            <div class="cartStatus">
-                <div class="cartStatusImage">
-                    <img src="images/cart.png" alt="cart-img"  >
-                </div>
+            <div class="cartStatus" id="cartStatus">
                 
+                
+                <div class="cartHeadingSection">
+                    <h1><b>Cart</b></h1>
+                    <p id="totalCartItems"> </p>
+                </div>
+                <div class="cartItemsList" id="cartItemsList">
+                    
+                </div>
             </div>
         </div>
         
-    
+        <script src="scripts/index.js"></script>
     </body>
 </html>
