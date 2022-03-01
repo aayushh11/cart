@@ -151,15 +151,17 @@ const model=new Model();
 
 
 
-const recommendedListView={
+function RecommendedListView()
+{
 
-    init(){
+    this.init=function()
+    {
         this.recommendedList = document.getElementById("recommendationList");
         
         this.render();
 
-    },
-    render()
+    };
+    this.render =function()
     {
         const unorderedRecommendedList=document.createElement('ul');
         const recommendedListItems=controller.getRecommendedListItems(); //Array of recommendedlist items
@@ -180,15 +182,17 @@ const recommendedListView={
 
 
 };
+const recommendedListView=new RecommendedListView();
 
-const menuItemListView={
+function MenuItemListView()
+{
     
-    init:function()
+    this.init=function()
     {
         this.menuItemListDiv=document.getElementById("menuItemList");
         this.render();
-    },
-    renderMenuHeading:function()
+    };
+    this.renderMenuHeading=function()
     {
         const menuHeadingDiv =document.createElement('div');
             menuHeadingDiv.classList.add("menuHeading");
@@ -197,13 +201,13 @@ const menuItemListView={
             menuHeadingDiv.append(menuHeadingText);
             return menuHeadingDiv;
     },
-    appendTotalNoOfItems:function(menuHeadingDiv)
+    this.appendTotalNoOfItems=function(menuHeadingDiv)
     {
         const menuSize=document.createElement('p')
         menuSize.innerText=controller.getMenuSize()+" items";
         menuHeadingDiv.append(menuSize);
     },
-    getVegImage:function(menuItemObj)
+    this.getVegImage=function(menuItemObj)
     {
         const vegImage=document.createElement('img');
         vegImage.setAttribute("src",menuItemObj.veg ? 'images/veg.jpg' :'');
@@ -212,19 +216,19 @@ const menuItemListView={
         return vegImage;
 
     },
-    getMenuItemName: function(menuItemObj)
+    this.getMenuItemName= function(menuItemObj)
     {
         const menuItemName=document.createElement('h3');
         menuItemName.innerText=menuItemObj.menuItemName;
         return menuItemName;
     },
-    getMenuItemPrice: function(menuItemObj)
+    this.getMenuItemPrice= function(menuItemObj)
     {
         const menuItemPrice=document.createElement('h3');
         menuItemPrice.innerText=menuItemObj.menuItemPrice+" Rs" ;
         return menuItemPrice;
     },
-    getMenuItemLeftSection: function(menuItemObj)
+    this.getMenuItemLeftSection=function(menuItemObj)
     {
         const menuItemLeftSection=document.createElement('div');
         menuItemLeftSection.classList.add("menuItemLeftSection");
@@ -233,7 +237,7 @@ const menuItemListView={
         menuItemLeftSection.append(this.getMenuItemPrice(menuItemObj));
         return menuItemLeftSection;
     },
-    renderItemImageDiv :function(menuItemObj)
+    this.renderItemImageDiv =function(menuItemObj)
     {
         const itemImageDiv=document.createElement('div');
         const itemImage=document.createElement('img');
@@ -243,7 +247,7 @@ const menuItemListView={
         itemImageDiv.append(itemImage);
         return itemImageDiv;
     },
-    renderAddButtonDiv :function(menuItemObj)
+    this.renderAddButtonDiv =function(menuItemObj)
     {
         const itemButtonDiv=document.createElement('div');
         const addButton=document.createElement('button');
@@ -254,7 +258,7 @@ const menuItemListView={
         itemButtonDiv.append(addButton);
         return itemButtonDiv;
     },
-    getMenuItemRightSection: function(menuItemObj)
+    this.getMenuItemRightSection= function(menuItemObj)
     {
         const menuItemRightSection=document.createElement('div');
         menuItemRightSection.classList.add("menuItemRightSection");
@@ -263,7 +267,7 @@ const menuItemListView={
         return menuItemRightSection;
 
     },
-    appendMenuItem: function(menuItemObj)
+    this.appendMenuItem= function(menuItemObj)
     {
         const menuItem =document.createElement('div');
         menuItem.classList.add("menuItem");
@@ -273,7 +277,7 @@ const menuItemListView={
         menuItem.append(menuItemRightSection);
         this.menuItemListDiv.append(menuItem);
     },
-    render:function()
+    this.render=function()
     {
         
         this.menuItemListDiv.innerHTML="";
@@ -305,15 +309,17 @@ const menuItemListView={
 
 
 };
+const menuItemListView=new MenuItemListView();
 
-const cartView={
-    init()
+function CartView()
+{
+    this.init=function()
     {
         this.cartSection=document.getElementById("cartSection");
         this.renderCart();
-    },
+    };
 
-    renderCartImage:function()
+    this.renderCartImage=function()
     {
         const cartImageDiv=document.createElement('div');
         cartImageDiv.className="cartStatusImage";
@@ -324,35 +330,35 @@ const cartView={
 
        
 
-    },
-    renderCartHeading:function()
+    };
+    this.renderCartHeading=function()
     {
         const cartHeading=document.createElement('h1');
         cartHeading.innerText="Cart";
         return cartHeading;
-    },
-    renderCartSize:function ()
+    };
+    this.renderCartSize=function ()
     {
         const cartSize=document.createElement('p');
         cartSize.innerText=controller.getTotalCartItems()+" items";
         return cartSize;
-    },
-    renderCartHeadingSection:function()
+    };
+    this.renderCartHeadingSection=function()
     {
         const cartHeadingSection=document.createElement('div');
         cartHeadingSection.classList.add("cartHeadingSection");
         cartHeadingSection.append(this.renderCartHeading());
         cartHeadingSection.append(this.renderCartSize());
         return cartHeadingSection;
-    },
-    renderCartItemName : function(cartItemObj)
+    };
+    this.renderCartItemName = function(cartItemObj)
     {
         const cartItemName=document.createElement('div');
         cartItemName.classList.add("cartItemName");
         cartItemName.innerText=cartItemObj.itemName;
         return cartItemName;
-    },
-    renderMinusButton :function(cartItemObj)
+    };
+    this.renderMinusButton =function(cartItemObj)
     {
         const minusButtonDiv=document.createElement('div');
         const minusButton=document.createElement('button');
@@ -361,8 +367,8 @@ const cartView={
         minusButton.innerText="-";
         minusButtonDiv.append(minusButton);
         return minusButtonDiv;
-    },
-    renderPlusButton :function(cartItemObj)
+    };
+    this.renderPlusButton =function(cartItemObj)
     {
         const plusButtonDiv=document.createElement('div');
         const plusButton=document.createElement('button');
@@ -372,15 +378,15 @@ const cartView={
         plusButtonDiv.append(plusButton);
         return plusButtonDiv;
 
-    },
-    renderIndividualItemQuantity :function(cartItemObj)
+    };
+    this.renderIndividualItemQuantity =function(cartItemObj)
     {
         const itemQuantity=document.createElement('div');
         itemQuantity.innerText=cartItemObj.qty;
         itemQuantity.classList.add("itemQuantity");
         return itemQuantity;
-    },
-    renderCartItemQuantity : function(cartItemObj)
+    };
+    this.renderCartItemQuantity = function(cartItemObj)
     {
         const cartItemQuantity=document.createElement('div');
         cartItemQuantity.classList.add("cartItemQuantity");
@@ -388,21 +394,21 @@ const cartView={
         cartItemQuantity.append(this.renderIndividualItemQuantity(cartItemObj));
         cartItemQuantity.append(this.renderPlusButton(cartItemObj));
         return cartItemQuantity;
-    },
-    renderCartItemTotal :function(cartItemObj)
+    };
+    this.renderCartItemTotal =function(cartItemObj)
     {
         const cartItemTotal=document.createElement('div');
         cartItemTotal.classList.add("cartItemTotal");
         cartItemTotal.innerText=`${cartItemObj.qty*cartItemObj.itemPrice}`;
         return cartItemTotal;
-    },
-    renderHorizontalRuler :function()
+    };
+    this.renderHorizontalRuler =function()
     {
         const horizontalRuler=document.createElement('HR');
         horizontalRuler.className='cartRuler';
         return horizontalRuler;
-    },
-    renderCartItem:function(cartItemObj)
+    };
+    this.renderCartItem=function(cartItemObj)
     {
         const cartItem=document.createElement('div');
         cartItem.classList.add("cartItem");
@@ -411,8 +417,8 @@ const cartView={
         cartItem.append(this.renderCartItemTotal(cartItemObj));
         this.cartSection.append(cartItem);
         this.cartSection.append(this.renderHorizontalRuler());
-    },
-    renderCartItemList:function()
+    };
+    this.renderCartItemList=function()
     {
         this.cartSection.append(this.renderCartHeading());
 
@@ -449,8 +455,8 @@ const cartView={
         
         
 
-    },
-    renderCart:function()
+    };
+    this.renderCart=function()
     {
         if(controller.isCartEmpty())
         {
@@ -462,9 +468,10 @@ const cartView={
             this.cartSection.innerHTML="";
             this.renderCartItemList()
         }
-    }
+    };
 
 }
+const cartView=new CartView();
 
 const controller={
 
