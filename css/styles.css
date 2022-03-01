@@ -1,4 +1,7 @@
 
+html{
+    font-size: 10px;
+}
 p{
     margin:0;
 }
@@ -271,13 +274,24 @@ body{
 }
 .cartItemQuantity{
     display:flex;
+    
     flex:2;
+}
+.itemQuantity {
+    background-color: #FFF;
+    
 }
 .cartItemName{
     flex:2;
 }
 .cartItemTotal{
     flex:1;
+}
+
+.cartQtyEditButtons{
+    background-color: #FFF;
+    border:0;
+    font-size: large;
 }
 
 .cartItemsList{
@@ -294,4 +308,9 @@ body{
 }
 .subtotalHeading{
     flex:1;
+}
+
+.cartRuler{
+    margin: 0.5rem;
+    height:0.1rem;
 }
