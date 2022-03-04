@@ -1,6 +1,60 @@
+'use strict'
+
+function Cart(itemName,itemNumber,itemPrice)
+{
+    this.itemNumber=itemNumber;
+    this.itemName=itemName;
+    this.itemPrice=itemPrice;
+    this.qty=1;
+    return this;
+}
+
+function MenuItem(itemNumber,itemName,itemPrice,imageFilePath,veg)
+{
+    this.menuItemName=itemName;
+    this.menuItemNumber=itemNumber;
+    this.menuItemPrice=itemPrice;
+    this.imageFilePath=imageFilePath;
+    this.veg=veg;
+}
+
 function Model()
 {
-    
+    const fetchPromiseCallback =function(resolve)
+    {
+        setTimeout(function(){
+            if(localStorage.getItem("myCart")!==null)
+            {
+                const fetchedData=JSON.parse(localStorage.getItem("myCart"));
+                resolve(fetchedData);
+                
+            }
+            else
+            {
+                resolve(null);
+            }
+            
+
+        },2000);
+    };
+
+    const fetchFromLocalStorage =function()
+    {
+        return new Promise(fetchPromiseCallback);
+        
+    }
+    const setFetchedDataToCart=function(fetchedData)
+    {
+        this.cart=fetchedData;
+        controller.view.cartView.init();
+    }
+    this.init=function()
+    {
+        const bindedSetFetchedDataToCart=setFetchedDataToCart.bind(this);
+        fetchFromLocalStorage().then(bindedSetFetchedDataToCart);
+    }
+
+
     this.recommendedList=["Recommended"];
     this.menuItemList=[];
     this.cart={
@@ -16,14 +70,7 @@ function Model()
 
     
 
-    this.CartBuilder=function(itemName,itemNumber,itemPrice){
-        this.itemNumber=itemNumber;
-        this.itemName=itemName;
-        this.itemPrice=itemPrice;
-        this.qty=1;
-        return this;
-
-    };
+    
     this.appendToCartItems=function(cartItem)
     {
         this.cart.cartItemList.push(cartItem);
@@ -31,18 +78,11 @@ function Model()
 
     this.menuItemList=[],
 
-    this.MenuItemBuilder=function(itemNumber,itemName,itemPrice,imageFilePath,veg)
-    {
-        this.menuItemName=itemName;
-        this.menuItemNumber=itemNumber;
-        this.menuItemPrice=itemPrice;
-        this.imageFilePath=imageFilePath;
-        this.veg=veg;
-    };
+    
 
-    this.menuItemList.push(new this.MenuItemBuilder(1,"Punjabi Samosa",50,"images/samosa.jpg",true));
-    this.menuItemList.push(new this.MenuItemBuilder(2,"Italian Samosa",80,"images/samosa.jpg",true));
-    this.menuItemList.push(new this.MenuItemBuilder(3,"Mexican Samosa",100,"images/samosa.jpg",true));
+    this.menuItemList.push(new MenuItem(1,"Punjabi Samosa",50,"images/samosa.jpg",true));
+    this.menuItemList.push(new MenuItem(2,"Italian Samosa",80,"images/samosa.jpg",true));
+    this.menuItemList.push(new MenuItem(3,"Mexican Samosa",100,"images/samosa.jpg",true));
 
     //methods
 
@@ -54,7 +94,7 @@ function Model()
     this.removeElementFromCartArray=function(index)
     {
         this.cart.cartItemList.splice(index,1);
-        localStorage.setItem("myCart",JSON.stringify(model.cart));
+        localStorage.setItem("myCart",JSON.stringify(this.cart));
     };
 
     this.setIsCartEmpty=function()
@@ -70,10 +110,20 @@ function Model()
         {
             if(this.cart.cartItemList[i].itemNumber===itemNumber)
             {
-                return itemNumber;
+                return true;
             }
         }
-        return -1;
+        return false;
+        /*
+        if(this.cart.cartItemList.find( cartItem => {cartItem.itemNumber===itemNumber})===undefined)
+        {
+            return false;
+        }
+        else{
+            return true;
+        }
+        */
+        
     };
 
     this.increaseCartItemQty=function(itemNumber)
@@ -91,7 +141,7 @@ function Model()
 
     this.createNewCartItem=function(itemNumber)
     {
-        this.appendToCartItems(new this.CartBuilder(this.menuItemList[itemNumber-1].menuItemName,this.menuItemList[itemNumber-1].menuItemNumber,this.menuItemList[itemNumber-1].menuItemPrice));
+        this.appendToCartItems(new Cart(this.menuItemList[itemNumber-1].menuItemName,this.menuItemList[itemNumber-1].menuItemNumber,this.menuItemList[itemNumber-1].menuItemPrice));
         localStorage.setItem("myCart",JSON.stringify(this.cart));
     }
 
@@ -147,7 +197,7 @@ function Model()
 
 }
 
-const model=new Model();
+//const model=new Model();
 
 
 
@@ -182,7 +232,7 @@ function RecommendedListView()
 
 
 };
-const recommendedListView=new RecommendedListView();
+//const recommendedListView=new RecommendedListView();
 
 function MenuItemListView()
 {
@@ -192,7 +242,7 @@ function MenuItemListView()
         this.menuItemListDiv=document.getElementById("menuItemList");
         this.render();
     };
-    this.renderMenuHeading=function()
+    const renderMenuHeading=function()
     {
         const menuHeadingDiv =document.createElement('div');
             menuHeadingDiv.classList.add("menuHeading");
@@ -200,14 +250,14 @@ function MenuItemListView()
             menuHeadingText.innerText="Recommended";
             menuHeadingDiv.append(menuHeadingText);
             return menuHeadingDiv;
-    },
-    this.appendTotalNoOfItems=function(menuHeadingDiv)
+    };
+    const appendTotalNoOfItems =function(menuHeadingDiv)
     {
         const menuSize=document.createElement('p')
         menuSize.innerText=controller.getMenuSize()+" items";
         menuHeadingDiv.append(menuSize);
-    },
-    this.getVegImage=function(menuItemObj)
+    };
+    const getVegImage=function(menuItemObj)
     {
         const vegImage=document.createElement('img');
         vegImage.setAttribute("src",menuItemObj.veg ? 'images/veg.jpg' :'');
@@ -215,29 +265,29 @@ function MenuItemListView()
         vegImage.classList.add("vegIcon");
         return vegImage;
 
-    },
-    this.getMenuItemName= function(menuItemObj)
+    };
+    const getMenuItemName= function(menuItemObj)
     {
         const menuItemName=document.createElement('h3');
         menuItemName.innerText=menuItemObj.menuItemName;
         return menuItemName;
-    },
-    this.getMenuItemPrice= function(menuItemObj)
+    };
+    const getMenuItemPrice= function(menuItemObj)
     {
         const menuItemPrice=document.createElement('h3');
         menuItemPrice.innerText=menuItemObj.menuItemPrice+" Rs" ;
         return menuItemPrice;
-    },
-    this.getMenuItemLeftSection=function(menuItemObj)
+    };
+    const getMenuItemLeftSection=function(menuItemObj)
     {
         const menuItemLeftSection=document.createElement('div');
         menuItemLeftSection.classList.add("menuItemLeftSection");
-        menuItemLeftSection.append(this.getVegImage(menuItemObj));
-        menuItemLeftSection.append(this.getMenuItemName(menuItemObj));
-        menuItemLeftSection.append(this.getMenuItemPrice(menuItemObj));
+        menuItemLeftSection.append(getVegImage(menuItemObj));
+        menuItemLeftSection.append(getMenuItemName(menuItemObj));
+        menuItemLeftSection.append(getMenuItemPrice(menuItemObj));
         return menuItemLeftSection;
-    },
-    this.renderItemImageDiv =function(menuItemObj)
+    };
+    const renderItemImageDiv =function(menuItemObj)
     {
         const itemImageDiv=document.createElement('div');
         const itemImage=document.createElement('img');
@@ -246,8 +296,8 @@ function MenuItemListView()
         itemImage.classList.add("itemIcon");
         itemImageDiv.append(itemImage);
         return itemImageDiv;
-    },
-    this.renderAddButtonDiv =function(menuItemObj)
+    };
+    const renderAddButtonDiv =function(menuItemObj)
     {
         const itemButtonDiv=document.createElement('div');
         const addButton=document.createElement('button');
@@ -257,46 +307,41 @@ function MenuItemListView()
         addButton.innerText="ADD";
         itemButtonDiv.append(addButton);
         return itemButtonDiv;
-    },
-    this.getMenuItemRightSection= function(menuItemObj)
+    };
+    const getMenuItemRightSection= function(menuItemObj)
     {
         const menuItemRightSection=document.createElement('div');
         menuItemRightSection.classList.add("menuItemRightSection");
-        menuItemRightSection.append(this.renderItemImageDiv(menuItemObj));
-        menuItemRightSection.append(this.renderAddButtonDiv(menuItemObj));
+        menuItemRightSection.append(renderItemImageDiv(menuItemObj));
+        menuItemRightSection.append(renderAddButtonDiv(menuItemObj));
         return menuItemRightSection;
 
-    },
-    this.appendMenuItem= function(menuItemObj)
+    };
+    const appendMenuItem= function(menuItemObj)
     {
         const menuItem =document.createElement('div');
         menuItem.classList.add("menuItem");
-        const menuItemLeftSection=this.getMenuItemLeftSection(menuItemObj);
+        const menuItemLeftSection=getMenuItemLeftSection(menuItemObj);
         menuItem.append(menuItemLeftSection);
-        const menuItemRightSection=this.getMenuItemRightSection(menuItemObj);
+        const menuItemRightSection=getMenuItemRightSection(menuItemObj);
         menuItem.append(menuItemRightSection);
         this.menuItemListDiv.append(menuItem);
-    },
+    };
     this.render=function()
     {
         
         this.menuItemListDiv.innerHTML="";
-        const menuHeadingDiv=this.renderMenuHeading();
-        this.appendTotalNoOfItems(menuHeadingDiv);
+        const menuHeadingDiv=renderMenuHeading();
+        appendTotalNoOfItems(menuHeadingDiv);
         this.menuItemListDiv.append(menuHeadingDiv);  
 
-        this.renderMenuItems =function ()
-        {
+        
             const menuItemList=controller.getMenuItemList();
-            let i=0;
-            for(i=0;i<controller.getMenuSize();i+=1)
-            {
-                this.appendMenuItem(menuItemList[i]);
-            }
+            menuItemList.forEach(appendMenuItem,this);
+            
 
-        }
-        this.renderMenuItems();
-    }
+        
+    };
     
             
             
@@ -309,7 +354,7 @@ function MenuItemListView()
 
 
 };
-const menuItemListView=new MenuItemListView();
+//const menuItemListView=new MenuItemListView();
 
 function CartView()
 {
@@ -319,46 +364,47 @@ function CartView()
         this.renderCart();
     };
 
-    this.renderCartImage=function()
+    //Helper Functions
+    const getCartImage=function()
     {
         const cartImageDiv=document.createElement('div');
         cartImageDiv.className="cartStatusImage";
         const cartImage=document.createElement('img');
         cartImage.setAttribute("src","images/cart.png")
         cartImageDiv.append(cartImage);
-        this.cartSection.append(cartImageDiv);
+        return cartImageDiv;
 
        
 
     };
-    this.renderCartHeading=function()
+    const createCartHeading=function()
     {
         const cartHeading=document.createElement('h1');
         cartHeading.innerText="Cart";
         return cartHeading;
     };
-    this.renderCartSize=function ()
+    const createCartSize=function ()
     {
         const cartSize=document.createElement('p');
         cartSize.innerText=controller.getTotalCartItems()+" items";
         return cartSize;
     };
-    this.renderCartHeadingSection=function()
+    const createCartHeadingSection=function()
     {
         const cartHeadingSection=document.createElement('div');
         cartHeadingSection.classList.add("cartHeadingSection");
-        cartHeadingSection.append(this.renderCartHeading());
-        cartHeadingSection.append(this.renderCartSize());
+        cartHeadingSection.append(createCartHeading());
+        cartHeadingSection.append(createCartSize());
         return cartHeadingSection;
     };
-    this.renderCartItemName = function(cartItemObj)
+    const createCartItemName = function(cartItemObj)
     {
         const cartItemName=document.createElement('div');
         cartItemName.classList.add("cartItemName");
         cartItemName.innerText=cartItemObj.itemName;
         return cartItemName;
     };
-    this.renderMinusButton =function(cartItemObj)
+    const renderMinusButton =function(cartItemObj)
     {
         const minusButtonDiv=document.createElement('div');
         const minusButton=document.createElement('button');
@@ -368,7 +414,7 @@ function CartView()
         minusButtonDiv.append(minusButton);
         return minusButtonDiv;
     };
-    this.renderPlusButton =function(cartItemObj)
+    const renderPlusButton =function(cartItemObj)
     {
         const plusButtonDiv=document.createElement('div');
         const plusButton=document.createElement('button');
@@ -379,81 +425,69 @@ function CartView()
         return plusButtonDiv;
 
     };
-    this.renderIndividualItemQuantity =function(cartItemObj)
+    const renderIndividualItemQuantity =function(cartItemObj)
     {
         const itemQuantity=document.createElement('div');
         itemQuantity.innerText=cartItemObj.qty;
         itemQuantity.classList.add("itemQuantity");
         return itemQuantity;
     };
-    this.renderCartItemQuantity = function(cartItemObj)
+    const renderCartItemQuantity = function(cartItemObj)
     {
         const cartItemQuantity=document.createElement('div');
         cartItemQuantity.classList.add("cartItemQuantity");
-        cartItemQuantity.append(this.renderMinusButton(cartItemObj));
-        cartItemQuantity.append(this.renderIndividualItemQuantity(cartItemObj));
-        cartItemQuantity.append(this.renderPlusButton(cartItemObj));
+        cartItemQuantity.append(renderMinusButton(cartItemObj));
+        cartItemQuantity.append(renderIndividualItemQuantity(cartItemObj));
+        cartItemQuantity.append(renderPlusButton(cartItemObj));
         return cartItemQuantity;
     };
-    this.renderCartItemTotal =function(cartItemObj)
+    const renderCartItemTotal =function(cartItemObj)
     {
         const cartItemTotal=document.createElement('div');
         cartItemTotal.classList.add("cartItemTotal");
         cartItemTotal.innerText=`${cartItemObj.qty*cartItemObj.itemPrice}`;
         return cartItemTotal;
     };
-    this.renderHorizontalRuler =function()
+    const renderHorizontalRuler =function()
     {
         const horizontalRuler=document.createElement('HR');
         horizontalRuler.className='cartRuler';
         return horizontalRuler;
     };
-    this.renderCartItem=function(cartItemObj)
+    const renderCartItem=function(cartItemObj)
     {
         const cartItem=document.createElement('div');
         cartItem.classList.add("cartItem");
-        cartItem.append(this.renderCartItemName(cartItemObj));
-        cartItem.append(this.renderCartItemQuantity(cartItemObj));
-        cartItem.append(this.renderCartItemTotal(cartItemObj));
-        this.cartSection.append(cartItem);
-        this.cartSection.append(this.renderHorizontalRuler());
+        cartItem.append(createCartItemName(cartItemObj));
+        cartItem.append(renderCartItemQuantity(cartItemObj));
+        cartItem.append(renderCartItemTotal(cartItemObj));
+        this.append(cartItem);
+        this.append(renderHorizontalRuler());
     };
-    this.renderCartItemList=function()
+    const createSubtotal=function()
     {
-        this.cartSection.append(this.renderCartHeading());
-
-        this.renderCartItems= function()
-        {
-            const cartItemObjects=controller.getCartArray();
-            for(i=0;i<controller.getCartSize();i+=1)
-            {
-                this.renderCartItem(cartItemObjects[i]);
-            }
-        }
-        this.renderCartItems();
-
-        
-        
-        
-        
         const subtotal=document.createElement('div');
-            subtotal.innerHTML=`
-            <div class="subtotalHeading">
-            <h3>Subtotal</h3>
-            </div>
-            <div class="subtotalAmount">
-            ${controller.getCartSubtotal()} Rs
-            </div>
-            `;
-            this.cartSection.append(subtotal);
-        
+        subtotal.className="cartSubtotal";
+        const subTotalHeading=document.createElement('h3');
+        subTotalHeading.className="subTotalHeading";
+        subTotalHeading.innerText="Subtotal";
+        subtotal.append(subTotalHeading);
 
+        const subtotalAmount=document.createElement('div');
+        subtotalAmount.innerText=controller.getCartSubtotal()+" Rs";
+        subtotal.append(subtotalAmount);
+        return subtotal;
+    }
+    const renderCartItemList=function()
+    {
+        const cartItemList=document.createElement('div');
+        cartItemList.append(createCartHeadingSection());
 
-
-        
-        
-        
-        
+        const cartItemObjects=controller.getCartArray();
+        cartItemObjects.forEach(renderCartItem,cartItemList);
+           
+        cartItemList.append(createSubtotal());
+        return cartItemList;
 
     };
     this.renderCart=function()
@@ -461,133 +495,141 @@ function CartView()
         if(controller.isCartEmpty())
         {
             this.cartSection.innerHTML="";
-            this.renderCartImage();
+            this.cartSection.append(getCartImage());
         }
         else
         {
             this.cartSection.innerHTML="";
-            this.renderCartItemList()
+            this.cartSection.append(renderCartItemList());
         }
     };
 
 }
-const cartView=new CartView();
+function View()
+{
+    this.recommendedListView=new RecommendedListView();
+    this.menuItemListView=new MenuItemListView();
+    this.cartView=new CartView();
+}
+//const cartView=new CartView();
 
-const controller={
-
-    init(){
-        if(localStorage.length!==0)
-        {
-             model.cart=JSON.parse(localStorage.getItem("myCart"));
-        }
-        recommendedListView.init();
-        menuItemListView.init();
-        cartView.init();
+function Controller(model,view)
+{
+    this.model=model;
+    this.view=view;
+    
+    
+    this.init=function(){
+        
+        this.model.init();
+        this.view.recommendedListView.init();
+        this.view.menuItemListView.init();
+        
        
-    },
+    };
     
 
 
 
     //methods
-    getRecommendedListItems()
+    this.getRecommendedListItems=function()
     {
         //console.log(model.recommendedList);
-        return model.getRecommendedListItems();
+        return this.model.getRecommendedListItems();
     },
 
-    getMenuSize()
+    this.getMenuSize=function()
     {
-        return model.getMenuLength();
+        return this.model.getMenuLength();
 
-    },
+    };
 
-    getMenuItemList()
+    this.getMenuItemList=function()
     {
-        return model.getMenuItemList();
+        return this.model.getMenuItemList();
+    };
+    this.isCartEmpty=function()
+    {
+        return this.model.getIsCartEmpty();
+    };
+
+    this.getCartSize=function()
+    {
+        return this.model.getCartLength();
     },
-    isCartEmpty()
+    this.getCartArray=function()
     {
-        return model.getIsCartEmpty();
-    },
-    getCartSize()
-    {
-        return model.getCartLength();
-    },
-    getCartArray()
-    {
-        return model.getCartArray();
+        return this.model.getCartArray();
     },
 
     
-    getTotalCartItems()
+    this.getTotalCartItems=function()
     {
         let total=0,i=0;
-        for(i=0;i<model.cart.cartItemList.length;i+=1)
+        for(i=0;i<this.model.cart.cartItemList.length;i+=1)
         {
-            total+=(model.cart.cartItemList[i].qty);
+            total+=(this.model.cart.cartItemList[i].qty);
         }
         return total;
     },
 
-    getCartSubtotal()
+    this.getCartSubtotal=function()
     {
         let subtotal=0,i=0;
-        for(i=0;i<model.cart.cartItemList.length;i+=1)
+        for(i=0;i<this.model.cart.cartItemList.length;i+=1)
         {
-            subtotal+=(model.cart.cartItemList[i].qty*model.cart.cartItemList[i].itemPrice);
+            subtotal+=(this.model.cart.cartItemList[i].qty*this.model.cart.cartItemList[i].itemPrice);
         }
         return subtotal;
 
     },
 
-    addToCart(itemNumber)
+    this.addToCart=function(itemNumber)
     {
        
-        model.setIsCartEmpty(); //set iscartEmpty to false
-        var alreadyPresent=false;
+        this.model.setIsCartEmpty(); //set iscartEmpty to false
 
-        if(model.isItemAlreadyPresentInCart(itemNumber)===-1)
+        if(!this.model.isItemAlreadyPresentInCart(itemNumber))
         {
-            model.createNewCartItem(itemNumber);
+            this.model.createNewCartItem(itemNumber);
         }
         else
         {
-            model.increaseCartItemQty(itemNumber);
+            this.model.increaseCartItemQty(itemNumber);
         }
 
         
             
-        cartView.init();
-        menuItemListView.init();
+        this.view.cartView.init();
+        this.view.menuItemListView.init();
     
     },
-    removeFromCart(itemNumber){
+    this.removeFromCart=function(itemNumber){
         
-        model.removeItemFromCart(itemNumber);
+        this.model.removeItemFromCart(itemNumber);
         
         //renderCart();
-        cartView.init();
-        menuItemListView.init();
+        this.view.cartView.init();
+        this.view.menuItemListView.init();
     
     },
 
-    isPresentInCart(itemNumber){
+    this.isPresentInCart=function(itemNumber){
        
         let isPresent=false;
-        model.getCartArray().forEach((cartItem) =>{
+        this.model.getCartArray().forEach((cartItem) =>{
             if(cartItem.itemNumber===itemNumber)
             {
                 isPresent=true;
             }
         })
-        return false;
+        return isPresent;
 
     },
-    getItemQty(itemNumber)
+    this.getItemQty=function(itemNumber)
     {
         let qty=0;
-        model.getCartArray().forEach((cartItem) =>{
+        this.model.getCartArray().forEach((cartItem) =>{
             if(cartItem.itemNumber===itemNumber)
             {
                 qty= cartItem.qty;
@@ -598,5 +640,6 @@ const controller={
 
 
 };
+const controller=new Controller(new Model(),new View());
 
 controller.init();
